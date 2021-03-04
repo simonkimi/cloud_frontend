@@ -1,4 +1,8 @@
+import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/network/api.dart';
+import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,7 +61,13 @@ class _LoginPageState extends State<LoginPage> {
                         width: 65,
                         height: 35,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await mainStore.login('simon_xu', 'xusong4041');
+                            } on DioError catch (e) {
+                              print(getDioErr(e));
+                            }
+                          },
                           child: const Text('登录'),
                           style: ButtonStyle(
                             foregroundColor:

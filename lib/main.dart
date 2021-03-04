@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/ui/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '云服务',
       debugShowCheckedModeBanner: false,
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

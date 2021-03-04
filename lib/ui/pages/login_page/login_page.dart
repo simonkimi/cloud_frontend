@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/utils.dart';
@@ -48,14 +49,11 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {},
                         child: const Text('注册'),
                         style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all(const Size(0, 0)),
+                            minimumSize:
+                                MaterialStateProperty.all(const Size(0, 0)),
                             padding:
                                 MaterialStateProperty.all(EdgeInsets.zero)),
                       ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      TextButton(onPressed: () {}, child: const Text('忘记密码?')),
                       const Expanded(child: SizedBox()),
                       SizedBox(
                         width: 65,
@@ -63,9 +61,16 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextButton(
                           onPressed: () async {
                             try {
-                              await mainStore.login('simon_xu', 'xusong4041');
+                              final username = _usernameController.value.text;
+                              final password = _passwordController.value.text;
+                              if (username.isEmpty || password.isEmpty) {
+                                BotToast.showText(text: '账号与密码不能为空!');
+                                return;
+                              }
+                              await mainStore.login(username, password);
+                              await mainStore.getMine();
                             } on DioError catch (e) {
-                              print(getDioErr(e));
+                              BotToast.showText(text: getDioErr(e));
                             }
                           },
                           child: const Text('登录'),

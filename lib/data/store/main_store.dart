@@ -62,15 +62,41 @@ abstract class MainStoreBase with Store {
   bool dormEvent;
 
   @action
-  Future<bool> login(String username, String password) async {
+  Future<void> login(String username, String password) async {
+    this.username = username;
+    this.password = username;
     final token = await api.login(username, password);
     api.token = token.token;
-    return true;
   }
 
   @action
   Future<void> getMine() async {
     final mine = await api.mine();
-
+    final profile = mine.userProfile;
+    nickname = profile.username;
+    server = profile.server;
+    mainSwitch = profile.mainSwitch;
+    point = profile.point;
+    lastLoginTime = profile.lastTime;
+    nextLoginTime = profile.nextTime;
+    exploreSwitch = profile.exploreSwitch;
+    campaignMap = profile.campaignMap;
+    campaignFormat = profile.campaignFormat;
+    pvpFleet = profile.pvpFleet;
+    pvpFormat = profile.pvpFormat;
+    pvpNight = profile.pvpNight;
+    repairSwitch = profile.repairSwitch;
+    buildSwitch = profile.buildSwitch;
+    buildOil = profile.buildOil;
+    buildAmmo = profile.buildAmmo;
+    buildSteel = profile.buildSteel;
+    buildAluminium = profile.buildAluminium;
+    equipmentSwitch = profile.equipmentSwitch;
+    equipmentOil = profile.equipmentOil;
+    equipmentAmmo = profile.equipmentAmmo;
+    equipmentSteel = profile.equipmentSteel;
+    equipmentAluminium = profile.equipmentAluminium;
+    dormEvent = profile.dormEvent;
+    print(mine);
   }
 }

@@ -32,6 +32,7 @@ class MineBean {
 
 class UserProfile {
   UserProfile({
+    this.username,
     this.server,
     this.mainSwitch,
     this.point,
@@ -60,6 +61,7 @@ class UserProfile {
   factory UserProfile.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
       : UserProfile(
+          username: asT(jsonRes['username']),
           server: asT<int>(jsonRes['server']),
           mainSwitch: asT<bool>(jsonRes['switch']),
           point: asT<int>(jsonRes['point']),
@@ -84,7 +86,7 @@ class UserProfile {
           equipmentAluminium: asT<int>(jsonRes['equipment_aluminium']),
           dormEvent: asT<bool>(jsonRes['dorm_event']),
         );
-
+  String username;
   int server;
 
   bool mainSwitch;

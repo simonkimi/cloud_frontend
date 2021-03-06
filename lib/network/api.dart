@@ -36,6 +36,13 @@ class Api {
     final rsp = await _dio.get('user/dashboard/');
     return DashBoardBean.fromJson(rsp.data);
   }
+
+  Future<UserProfile> setSwitch(bool value) async {
+    final rsp = await _dio.post('user/setting/', data: {
+      'switch': value
+    });
+    return UserProfile.fromJson(rsp.data);
+  }
 }
 
 class AuthInterceptor extends InterceptorsWrapper {

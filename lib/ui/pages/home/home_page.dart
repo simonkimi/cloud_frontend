@@ -1,9 +1,14 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/constant.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
+import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_frontend/utils/time_utils.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,11 +18,27 @@ class HomePage extends StatefulWidget {
 mixin _HomePageStateMixin<T extends StatefulWidget> on State<T> {
   bool isLoading = true;
   DashBoardBean dashBoardData;
+  bool isSwitchLoading = false;
 
   Future<void> loadDashBoard() async {
     dashBoardData = await api.dashboard();
     isLoading = false;
     setState(() {});
+  }
+
+  Future<void> onSwitchTap(bool value) async {
+    try {
+      setState(() {
+        isSwitchLoading = true;
+      });
+      await mainStore.setSwitch(value);
+    } on DioError catch (e) {
+      BotToast.showText(text: getDioErr(e));
+    } finally {
+      setState(() {
+        isSwitchLoading = false;
+      });
+    }
   }
 }
 
@@ -34,7 +55,7 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(tag: 'home'),
       body: buildBody(context),
     );
   }
@@ -63,6 +84,33 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
     );
   }
 
+  Widget buildHeader() {
+    return Observer(builder: (_) {
+      return Card(
+        child: ListTile(
+          leading: const CircleAvatar(
+            backgroundImage: AssetImage('assets/imgs/t.png'),
+          ),
+          title: Text('${SERVER_LIST[mainStore.server]} 提督 Lv.${mainStore.level} '),
+          subtitle: Text(mainStore.sign),
+          trailing: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: isSwitchLoading ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+              ),
+            ) : Switch(
+              value: mainStore.mainSwitch,
+              onChanged: onSwitchTap,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   Widget buildBody(BuildContext context) {
     if (!mainStore.isLogin) {
       Future.delayed(const Duration(seconds: 0), () {
@@ -76,8 +124,12 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
     }
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Column(
+      child: ListView(
         children: [
+          buildHeader(),
+          const SizedBox(height: 10),
+          buildMine(),
+          const SizedBox(height: 10),
           buildRes(),
           const SizedBox(height: 10),
           buildExplore(),
@@ -109,6 +161,29 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
     );
   }
 
+  Widget buildMine() {
+    return Container(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text('基础数据'),
+              const SizedBox(height: 5),
+              Text(
+                  '上次登录时间: ${mainStore.lastLoginTime.bySeconds.toLocal().toString()}'),
+              const SizedBox(height: 3),
+              Text(
+                  '下次登录时间: ${mainStore.nextLoginTime.bySeconds.toLocal().toString()}'),
+              const SizedBox(height: 3),
+              Text('点数: ${mainStore.point}'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget buildBuildShip() {
     final buildList = List.generate(7, (index) {
@@ -134,7 +209,9 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
                 borderRadius: const BorderRadius.all(Radius.circular(5))),
             child: Column(
               children: [
-                Text(SHIP_TYPE.containsKey(build.type) ? SHIP_TYPE[build.type]: '未知'),
+                Text(SHIP_TYPE.containsKey(build.type)
+                    ? SHIP_TYPE[build.type]
+                    : '未知'),
                 Text(time == 0
                     ? '已完成'
                     : '剩余${hour == 0 ? '00' : hour}:${minute < 10 ? '0' : ''}$minute'),

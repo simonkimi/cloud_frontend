@@ -31,32 +31,33 @@ class MineBean {
 }
 
 class UserProfile {
-  UserProfile({
-    this.username,
-    this.server,
-    this.mainSwitch,
-    this.point,
-    this.lastTime,
-    this.nextTime,
-    this.exploreSwitch,
-    this.campaignMap,
-    this.campaignFormat,
-    this.pvpFleet,
-    this.pvpFormat,
-    this.pvpNight,
-    this.repairSwitch,
-    this.buildSwitch,
-    this.buildOil,
-    this.buildAmmo,
-    this.buildSteel,
-    this.buildAluminium,
-    this.equipmentSwitch,
-    this.equipmentOil,
-    this.equipmentAmmo,
-    this.equipmentSteel,
-    this.equipmentAluminium,
-    this.dormEvent,
-  });
+  UserProfile(
+      {this.username,
+      this.server,
+      this.mainSwitch,
+      this.point,
+      this.lastTime,
+      this.nextTime,
+      this.exploreSwitch,
+      this.campaignMap,
+      this.campaignFormat,
+      this.pvpFleet,
+      this.pvpFormat,
+      this.pvpNight,
+      this.repairSwitch,
+      this.buildSwitch,
+      this.buildOil,
+      this.buildAmmo,
+      this.buildSteel,
+      this.buildAluminium,
+      this.equipmentSwitch,
+      this.equipmentOil,
+      this.equipmentAmmo,
+      this.equipmentSteel,
+      this.equipmentAluminium,
+      this.dormEvent,
+      this.sign,
+      this.level});
 
   factory UserProfile.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
@@ -85,12 +86,15 @@ class UserProfile {
           equipmentSteel: asT<int>(jsonRes['equipment_steel']),
           equipmentAluminium: asT<int>(jsonRes['equipment_aluminium']),
           dormEvent: asT<bool>(jsonRes['dorm_event']),
+          sign: asT<String>(jsonRes['sign']),
+          level: asT<int>(jsonRes['level']),
         );
   String username;
   int server;
 
   bool mainSwitch;
-
+  String sign;
+  int level;
   int point;
   int lastTime;
   int nextTime;
@@ -137,6 +141,8 @@ class UserProfile {
         'equipment_steel': equipmentSteel,
         'equipment_aluminium': equipmentAluminium,
         'dorm_event': dormEvent,
+        'sign': sign,
+        'level': level
       };
 
   @override

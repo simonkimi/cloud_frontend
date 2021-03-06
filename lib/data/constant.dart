@@ -1,4 +1,4 @@
-const SHIP_TYPE = {
+const SHIP_TYPE = <int, String>{
   1: '航母',
   2: '轻母',
   3: '装母',
@@ -19,3 +19,16 @@ const SHIP_TYPE = {
   24: '防驱',
   26: '导战'
 };
+
+
+const SERVER_LIST = <int, String>{
+  0: '胡德',
+  1: '俾斯麦',
+  2: '昆西',
+  3: '长春',
+  4: '列克星敦',
+  5: '维内托'
+};
+
+
+

@@ -1,4 +1,5 @@
 import 'package:cloud_frontend/network/api.dart';
+import 'package:cloud_frontend/network/bean/mine.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,10 @@ abstract class MainStoreBase with Store {
   String token;
   @observable
   String username;
+  @observable
+  String sign;
+  @observable
+  int level;
   @observable
   String nickname;
   @observable
@@ -78,6 +83,12 @@ abstract class MainStoreBase with Store {
   }
 
   @action
+  Future<void> setSwitch(bool value) async {
+    final profile = await api.setSwitch(value);
+    setUserProfile(profile);
+  }
+
+  @action
   Future<void> login(String username, String password) async {
     this.username = username;
     this.password = username;
@@ -113,8 +124,12 @@ abstract class MainStoreBase with Store {
   @action
   Future<void> getMine() async {
     final mine = await api.mine();
-    final profile = mine.userProfile;
     username = mine.username;
+    setUserProfile(mine.userProfile);
+  }
+
+  @action
+  void setUserProfile(UserProfile profile) {
     nickname = profile.username;
     server = profile.server;
     mainSwitch = profile.mainSwitch;
@@ -139,5 +154,7 @@ abstract class MainStoreBase with Store {
     equipmentSteel = profile.equipmentSteel;
     equipmentAluminium = profile.equipmentAluminium;
     dormEvent = profile.dormEvent;
+    sign = profile.sign;
+    level = profile.level;
   }
 }

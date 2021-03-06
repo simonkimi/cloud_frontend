@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cloud_frontend/data/constant.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
@@ -17,7 +18,7 @@ mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
   final _passwordController = TextEditingController();
   int server = 0;
   bool isLoginPage = true;
-  bool isLoading = true;
+  bool isLoading = false;
 
   Future<void> onLogin() async {
     if (isLoading) {
@@ -135,14 +136,10 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                       server = value.value;
                     });
                   },
-                  choiceItems: [
-                    S2Choice<int>(value: 0, title: '胡德'),
-                    S2Choice<int>(value: 1, title: '俾斯麦'),
-                    S2Choice<int>(value: 2, title: '昆西'),
-                    S2Choice<int>(value: 3, title: '长春'),
-                    S2Choice<int>(value: 4, title: '列克星敦'),
-                    S2Choice<int>(value: 5, title: '维内托'),
-                  ],
+                  choiceItems: SERVER_LIST
+                      .map((key, value) => MapEntry(
+                          key, S2Choice<int>(value: key, title: value)))
+                      .values,
                 ),
                 const SizedBox(height: 50),
                 Row(

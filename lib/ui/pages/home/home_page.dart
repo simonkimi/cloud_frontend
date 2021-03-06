@@ -1,3 +1,4 @@
+import 'package:cloud_frontend/data/constant.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
@@ -80,6 +81,12 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
           buildRes(),
           const SizedBox(height: 10),
           buildExplore(),
+          const SizedBox(height: 10),
+          buildRepair(),
+          const SizedBox(height: 10),
+          buildBuildShip(),
+          const SizedBox(height: 10),
+          buildEquipment()
         ],
       ),
     );
@@ -102,18 +109,243 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
     );
   }
 
-  Widget buildExplore() {
-    final exploreCard = dashBoardData.explore.map((e) {
-      final stamp = DateTime.now().millisecondsSinceEpoch;
-      final time = ((stamp - e.endTime).abs() / 60).toString();
 
+  Widget buildBuildShip() {
+    final buildList = List.generate(7, (index) {
+      if (index.isOdd) {
+        return const SizedBox(
+          width: 5,
+        );
+      }
+      index ~/= 2;
+      if (index < dashBoardData.build.length) {
+        final stamp = DateTime.now().millisecondsSinceEpoch / 1000;
+        final build = dashBoardData.build[index];
+        var time = build.endTime - stamp;
+        time = time < 0 ? 0 : time;
+        time /= 60;
+        final hour = time ~/ 60;
+        final minute = (time - hour * 60).floor();
+        return Expanded(
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
+            child: Column(
+              children: [
+                Text(SHIP_TYPE.containsKey(build.type) ? SHIP_TYPE[build.type]: '未知'),
+                Text(time == 0
+                    ? '已完成'
+                    : '剩余${hour == 0 ? '00' : hour}:${minute < 10 ? '0' : ''}$minute'),
+              ],
+            ),
+          ),
+        );
+      }
       return Expanded(
+        flex: 1,
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(
-            children: [Text(e.map.replaceAll('000', '-')), Text(time)],
+            children: const [Text('空闲'), Text('')],
+          ),
+        ),
+      );
+    }).toList();
+
+    return Container(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text('建造列表'),
+              const SizedBox(height: 5),
+              Row(
+                children: buildList,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildEquipment() {
+    final buildList = List.generate(7, (index) {
+      if (index.isOdd) {
+        return const SizedBox(
+          width: 5,
+        );
+      }
+      index ~/= 2;
+      if (index < dashBoardData.equipment.length) {
+        final stamp = DateTime.now().millisecondsSinceEpoch / 1000;
+        final equipment = dashBoardData.equipment[index];
+        var time = equipment.endTime - stamp;
+        time = time < 0 ? 0 : time;
+        time /= 60;
+        final hour = time ~/ 60;
+        final minute = (time - hour * 60).floor();
+        return Expanded(
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
+            child: Column(
+              children: [
+                Text('位置${index + 1}'),
+                Text(time == 0
+                    ? '已完成'
+                    : '剩余${hour == 0 ? '00' : hour}:${minute < 10 ? '0' : ''}$minute'),
+              ],
+            ),
+          ),
+        );
+      }
+      return Expanded(
+        flex: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Column(
+            children: const [Text('空闲'), Text('')],
+          ),
+        ),
+      );
+    }).toList();
+
+    return Container(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text('开发列表'),
+              const SizedBox(height: 5),
+              Row(
+                children: buildList,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRepair() {
+    final repairList = List.generate(7, (index) {
+      if (index.isOdd) {
+        return const SizedBox(
+          width: 5,
+        );
+      }
+      index ~/= 2;
+      if (index < dashBoardData.repair.length) {
+        final stamp = DateTime.now().millisecondsSinceEpoch / 1000;
+        final repair = dashBoardData.repair[index];
+        var time = repair.endTime - stamp;
+        time = time < 0 ? 0 : time;
+        time /= 60;
+        final hour = time ~/ 60;
+        final minute = (time - hour * 60).floor();
+        return Expanded(
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
+            child: Column(
+              children: [
+                Text(repair.name),
+                Text(time == 0
+                    ? '已完成'
+                    : '剩余${hour == 0 ? '00' : hour}:${minute < 10 ? '0' : ''}$minute'),
+              ],
+            ),
+          ),
+        );
+      }
+      return Expanded(
+        flex: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Column(
+            children: const [Text('空闲'), Text('')],
+          ),
+        ),
+      );
+    }).toList();
+
+    return Container(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              const Text('修理列表'),
+              const SizedBox(height: 5),
+              Row(
+                children: repairList,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildExplore() {
+    final exploreList = List.generate(7, (index) {
+      if (index.isOdd) {
+        return const SizedBox(
+          width: 5,
+        );
+      }
+      index ~/= 2;
+      if (index < dashBoardData.explore.length) {
+        final stamp = DateTime.now().millisecondsSinceEpoch / 1000;
+        final explore = dashBoardData.explore[index];
+        var time = explore.endTime - stamp;
+        time = time < 0 ? 0 : time;
+        time /= 60;
+        final hour = time ~/ 60;
+        final minute = (time - hour * 60).floor();
+        return Expanded(
+          flex: 1,
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(5))),
+            child: Column(
+              children: [
+                Text(explore.map.replaceAll('000', '-')),
+                Text(time == 0
+                    ? '已完成'
+                    : '剩余${hour == 0 ? '00' : hour}:${minute < 10 ? '0' : ''}$minute'),
+              ],
+            ),
+          ),
+        );
+      }
+      return Expanded(
+        flex: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE4E7ED), width: 0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Column(
+            children: const [Text('空闲'), Text('')],
           ),
         ),
       );
@@ -129,59 +361,7 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
               const Text('远征列表'),
               const SizedBox(height: 5),
               Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFE4E7ED), width: 0.5),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Column(
-                        children: [Text('2-1'), Text('2021/3/5')],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFE4E7ED), width: 0.5),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Column(
-                        children: [Text('2-1'), Text('2021/3/5')],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFE4E7ED), width: 0.5),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Column(
-                        children: [Text('2-1'), Text('2021/3/5')],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xFFE4E7ED), width: 0.5),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Column(
-                        children: [Text('2-1'), Text('2021/3/5')],
-                      ),
-                    ),
-                  ),
-                ],
+                children: exploreList,
               )
             ],
           ),

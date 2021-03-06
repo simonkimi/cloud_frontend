@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/constant.dart';
+
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
@@ -23,7 +24,9 @@ mixin _HomePageStateMixin<T extends StatefulWidget> on State<T> {
   Future<void> loadDashBoard() async {
     dashBoardData = await api.dashboard();
     isLoading = false;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> onSwitchTap(bool value) async {
@@ -197,8 +200,7 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
         final stamp = DateTime.now().millisecondsSinceEpoch / 1000;
         final build = dashBoardData.build[index];
         var time = build.endTime - stamp;
-        time = time < 0 ? 0 : time;
-        time /= 60;
+        time = time < 0 ? 0 : time / 60;
         final hour = time ~/ 60;
         final minute = (time - hour * 60).floor();
         return Expanded(

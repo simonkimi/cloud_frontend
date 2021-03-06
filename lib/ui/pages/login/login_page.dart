@@ -78,9 +78,16 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
       body: buildBody(context),
     );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    print('_LoginPageState');
   }
 
   Widget buildBody(BuildContext context) {
@@ -139,7 +146,7 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                   choiceItems: SERVER_LIST
                       .map((key, value) => MapEntry(
                           key, S2Choice<int>(value: key, title: value)))
-                      .values,
+                      .values.toList(),
                 ),
                 const SizedBox(height: 50),
                 Row(

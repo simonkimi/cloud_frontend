@@ -85,7 +85,13 @@ abstract class MainStoreBase with Store {
   @action
   Future<void> setSwitch(bool value) async {
     final profile = await api.setSwitch(value);
-    setUserProfile(profile);
+    await setUserProfile(profile);
+  }
+
+  @action
+  Future<void> setExploreSwitch(bool value) async {
+    final profile = await api.setExploreSwitch(value);
+    await setUserProfile(profile);
   }
 
   @action
@@ -125,11 +131,11 @@ abstract class MainStoreBase with Store {
   Future<void> getMine() async {
     final mine = await api.mine();
     username = mine.username;
-    setUserProfile(mine.userProfile);
+    await setUserProfile(mine.userProfile);
   }
 
   @action
-  void setUserProfile(UserProfile profile) {
+  Future<void> setUserProfile(UserProfile profile) async {
     nickname = profile.username;
     server = profile.server;
     mainSwitch = profile.mainSwitch;

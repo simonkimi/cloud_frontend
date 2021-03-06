@@ -1,5 +1,7 @@
+
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
+import 'package:cloud_frontend/network/bean/explore.dart';
 import 'package:cloud_frontend/network/bean/mine.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
@@ -38,10 +40,19 @@ class Api {
   }
 
   Future<UserProfile> setSwitch(bool value) async {
-    final rsp = await _dio.post('user/setting/', data: {
-      'switch': value
-    });
+    final rsp = await _dio.post('user/setting/', data: {'switch': value});
     return UserProfile.fromJson(rsp.data);
+  }
+
+  Future<UserProfile> setExploreSwitch(bool value) async {
+    final rsp =
+        await _dio.post('user/setting/', data: {'explore_switch': value});
+    return UserProfile.fromJson(rsp.data);
+  }
+
+  Future<ExploreBean> getExplore() async {
+    final rsp = await _dio.get('explore/');
+    return ExploreBean.fromJson(rsp.data);
   }
 }
 

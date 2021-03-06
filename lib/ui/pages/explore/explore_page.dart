@@ -53,14 +53,14 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            buildSwitch(),
+            buildSwitch(mainStore.exploreSwitch),
           ],
         ),
       );
     });
   }
 
-  Card buildSwitch() {
+  Card buildSwitch(bool value) {
     return Card(
       child: ListTile(
         title: const Text('远征开关'),
@@ -75,7 +75,7 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
             ),
           )
               : Switch(
-            value: mainStore.exploreSwitch ?? false,
+            value: value ?? false,
             onChanged: onExploreSwitch,
           ),
         ),

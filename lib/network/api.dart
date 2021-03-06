@@ -6,14 +6,14 @@ import 'package:cloud_frontend/network/bean/mine.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
 
-const baseUrl = 'http://127.0.0.1:8000/api/';
+const baseUrl = 'http://192.168.2.244:8000/api/';
 
 final api = Api();
 
 class Api {
   final _dio = Dio()
     ..options.baseUrl = baseUrl
-    ..options.connectTimeout = 10
+    ..options.connectTimeout = 1000 * 30
     ..interceptors.add(AuthInterceptor());
 
   Future<TokenBean> register(

@@ -38,6 +38,7 @@ mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
       await mainStore.getMine();
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } on DioError catch (e) {
+      print(e);
       BotToast.showText(text: getDioErr(e));
     } finally {
       setState(() {

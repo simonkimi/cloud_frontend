@@ -12,12 +12,67 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   int server = 0;
   bool isLoginPage = true;
+  bool isLoading = true;
 
+  Future<void> onLogin() async {
+    if (isLoading) {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final username = _usernameController.value.text;
+      final password = _passwordController.value.text;
+      if (username.isEmpty || password.isEmpty) {
+        BotToast.showText(text: '账号与密码不能为空!');
+        return;
+      }
+      await mainStore.login(username, password);
+      await mainStore.getMine();
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    } on DioError catch (e) {
+      BotToast.showText(text: getDioErr(e));
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> onRegister() async {
+    if (isLoading) {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final username = _usernameController.value.text;
+      final password = _passwordController.value.text;
+      if (username.isEmpty || password.isEmpty) {
+        BotToast.showText(text: '账号与密码不能为空!');
+        return;
+      }
+      await mainStore.register(username, password, server);
+      await mainStore.getMine();
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    } on DioError catch (e) {
+      BotToast.showText(text: getDioErr(e));
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+}
+
+class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +149,11 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        setState(() {
-                          isLoginPage = true;
-                        });
+                        if (!isLoading) {
+                          setState(() {
+                            isLoginPage = true;
+                          });
+                        }
                       },
                       child: const Text('已有账号?'),
                       style: ButtonStyle(
@@ -109,23 +166,17 @@ class _LoginPageState extends State<LoginPage> {
                       width: 65,
                       height: 35,
                       child: TextButton(
-                        onPressed: () async {
-                          try {
-                            final username = _usernameController.value.text;
-                            final password = _passwordController.value.text;
-                            if (username.isEmpty || password.isEmpty) {
-                              BotToast.showText(text: '账号与密码不能为空!');
-                              return;
-                            }
-                            await mainStore.register(username, password, server);
-                            await mainStore.getMine();
-                            Navigator.of(context)
-                                .pushNamedAndRemoveUntil('/', (route) => false);
-                          } on DioError catch (e) {
-                            BotToast.showText(text: getDioErr(e));
-                          }
-                        },
-                        child: const Text('注册'),
+                        onPressed: onRegister,
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : const Text('注册'),
                         style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
@@ -173,9 +224,11 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        setState(() {
-                          isLoginPage = false;
-                        });
+                        if (!isLoading) {
+                          setState(() {
+                            isLoginPage = false;
+                          });
+                        }
                       },
                       child: const Text('注册'),
                       style: ButtonStyle(
@@ -188,23 +241,17 @@ class _LoginPageState extends State<LoginPage> {
                       width: 65,
                       height: 35,
                       child: TextButton(
-                        onPressed: () async {
-                          try {
-                            final username = _usernameController.value.text;
-                            final password = _passwordController.value.text;
-                            if (username.isEmpty || password.isEmpty) {
-                              BotToast.showText(text: '账号与密码不能为空!');
-                              return;
-                            }
-                            await mainStore.login(username, password);
-                            await mainStore.getMine();
-                            Navigator.of(context)
-                                .pushNamedAndRemoveUntil('/', (route) => false);
-                          } on DioError catch (e) {
-                            BotToast.showText(text: getDioErr(e));
-                          }
-                        },
-                        child: const Text('登录'),
+                        onPressed: onLogin,
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                  strokeWidth: 2.5,
+                                ),
+                              )
+                            : const Text('登录'),
                         style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),

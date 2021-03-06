@@ -37,6 +37,6 @@ String getDioErr(DioError err) {
   if (data is Map) {
     return data.keys.map((e) => '$e: ${data[e]}').join('\n');
   } else {
-    return data.toString();
+    return err.toString();
   }
 }

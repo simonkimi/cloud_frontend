@@ -1,11 +1,33 @@
 import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/network/api.dart';
+import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'home_store.dart';
 
-class HomePage extends StatelessWidget {
-  final store = HomeStore();
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+mixin _HomePageStateMixin<T extends StatefulWidget> on State<T> {
+  bool isLoading = true;
+  DashBoardBean dashBoardData;
+
+  Future<void> loadDashBoard() async {
+    dashBoardData = await api.dashboard();
+    isLoading = false;
+    setState(() {});
+  }
+}
+
+class _HomePageState extends State<HomePage> with _HomePageStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    if (mainStore.isLogin) {
+      loadDashBoard();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,28 +63,26 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
-    return Observer(builder: (_) {
-      if (mainStore.isInit && !mainStore.isLogin) {
-        Future.delayed(const Duration(seconds: 0), () {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('login/', (route) => false);
-        });
-        return Container();
-      }
-      if (store.isLoading) {
-        return buildLoading();
-      }
-      return Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            buildRes(),
-            const SizedBox(height: 10),
-            buildExplore(),
-          ],
-        ),
-      );
-    });
+    if (!mainStore.isLogin) {
+      Future.delayed(const Duration(seconds: 0), () {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('login/', (route) => false);
+      });
+      return Container();
+    }
+    if (isLoading) {
+      return buildLoading();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          buildRes(),
+          const SizedBox(height: 10),
+          buildExplore(),
+        ],
+      ),
+    );
   }
 
   Widget buildResItem(String imgPath, String text) {
@@ -83,7 +103,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildExplore() {
-    final exploreCard = store.dashBoardData.explore.map((e) {
+    final exploreCard = dashBoardData.explore.map((e) {
       final stamp = DateTime.now().millisecondsSinceEpoch;
       final time = ((stamp - e.endTime).abs() / 60).toString();
 
@@ -183,41 +203,41 @@ class HomePage extends StatelessWidget {
               Row(
                 children: [
                   buildResItem(
-                      'you.png', store.dashBoardData.resource.oil.toString()),
+                      'you.png', dashBoardData.resource.oil.toString()),
                   buildResItem(
-                      'dan.png', store.dashBoardData.resource.ammo.toString()),
-                  buildResItem('gang.png',
-                      store.dashBoardData.resource.steel.toString()),
-                  buildResItem('lv.png',
-                      store.dashBoardData.resource.aluminium.toString()),
+                      'dan.png', dashBoardData.resource.ammo.toString()),
+                  buildResItem(
+                      'gang.png', dashBoardData.resource.steel.toString()),
+                  buildResItem(
+                      'lv.png', dashBoardData.resource.aluminium.toString()),
                 ],
               ),
               const SizedBox(height: 5),
               Row(
                 children: [
-                  buildResItem('jl.png',
-                      store.dashBoardData.resource.buildMap.toString()),
+                  buildResItem(
+                      'jl.png', dashBoardData.resource.buildMap.toString()),
                   buildResItem('zblt.png',
-                      store.dashBoardData.resource.equipmentMap.toString()),
-                  buildResItem('kj.png',
-                      store.dashBoardData.resource.fastBuild.toString()),
-                  buildResItem('kx.png',
-                      store.dashBoardData.resource.fastRepair.toString()),
+                      dashBoardData.resource.equipmentMap.toString()),
+                  buildResItem(
+                      'kj.png', dashBoardData.resource.fastBuild.toString()),
+                  buildResItem(
+                      'kx.png', dashBoardData.resource.fastRepair.toString()),
                 ],
               ),
               const SizedBox(height: 5),
               Row(
                 children: [
                   buildResItem(
-                      'qz.png', store.dashBoardData.resource.ddCube.toString()),
+                      'qz.png', dashBoardData.resource.ddCube.toString()),
                   buildResItem(
-                      'xy.png', store.dashBoardData.resource.clCube.toString()),
+                      'xy.png', dashBoardData.resource.clCube.toString()),
                   buildResItem(
-                      'zl.png', store.dashBoardData.resource.bbCube.toString()),
+                      'zl.png', dashBoardData.resource.bbCube.toString()),
                   buildResItem(
-                      'hm.png', store.dashBoardData.resource.cvCube.toString()),
+                      'hm.png', dashBoardData.resource.cvCube.toString()),
                   buildResItem(
-                      'qt.png', store.dashBoardData.resource.ssCube.toString()),
+                      'qt.png', dashBoardData.resource.ssCube.toString()),
                 ],
               ),
             ],

@@ -9,14 +9,8 @@ final mainStore = MainStore();
 class MainStore = MainStoreBase with _$MainStore;
 
 abstract class MainStoreBase with Store {
-  MainStoreBase() {
-    init();
-  }
-
   @observable
-  bool isInit = false;
-  @observable
-  bool isLogin;
+  bool isLogin = false;
   @observable
   String token;
   @observable
@@ -74,18 +68,12 @@ abstract class MainStoreBase with Store {
 
   @action
   Future<void> init() async {
-    try {
-      isLogin = false;
-      final pref = await SharedPreferences.getInstance();
-      final token = pref.getString('token') ?? '';
-      print('token: $token');
-      this.token = token;
-      if (token.isNotEmpty) {
-        getMine();
-        isLogin = true;
-      }
-    } finally {
-      isInit = true;
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token') ?? '';
+    this.token = token;
+    if (token.isNotEmpty) {
+      isLogin = true;
+      getMine();
     }
   }
 
@@ -94,6 +82,18 @@ abstract class MainStoreBase with Store {
     this.username = username;
     this.password = username;
     final token = await api.login(username, password);
+    this.token = token.token;
+    final pref = await SharedPreferences.getInstance();
+    pref.setString('token', token.token);
+    print('设置Token ${token.token}');
+    isLogin = true;
+  }
+
+  @action
+  Future<void> register(String username, String password, int server) async {
+    this.username = username;
+    this.password = username;
+    final token = await api.register(username, password, server);
     this.token = token.token;
     final pref = await SharedPreferences.getInstance();
     pref.setString('token', token.token);

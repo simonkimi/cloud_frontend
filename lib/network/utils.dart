@@ -35,7 +35,7 @@ T asT<T>(dynamic value) {
 String getDioErr(DioError err) {
   final data = err?.response?.data;
   if (data is Map) {
-    return data.values.join('');
+    return data.keys.map((e) => '$e: ${data[e]}').join('\n');
   } else {
     return data.toString();
   }

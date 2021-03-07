@@ -56,6 +56,8 @@ mixin _ExplorePageStateMixin<T extends StatefulWidget> on State<T> {
     } else if (type == 2) {
       endTime = startTime - 24 * 60 * 60;
     } else if (type == 3) {
+      endTime = startTime - 7 * 24 * 60 * 60;
+    } else if (type == 4) {
       endTime = 0;
     }
     await loadStatistic(startTime, endTime);
@@ -179,7 +181,8 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
                         choiceItems: [
                           S2Choice(value: 1, title: '今日'),
                           S2Choice(value: 2, title: '24小时'),
-                          S2Choice(value: 3, title: '全部'),
+                          S2Choice(value: 3, title: '一周'),
+                          S2Choice(value: 4, title: '全部'),
                         ],
                         value: 1,
                         onChange: (value) => loadTimeStatistic(value.value),

@@ -95,7 +95,7 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
           children: [
             buildSwitch(mainStore.exploreSwitch),
             buildStatistic(),
-            ExploreDataTable(),
+            ExploreTable(),
           ],
         ),
       );

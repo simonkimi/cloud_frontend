@@ -1,8 +1,10 @@
 import 'dart:convert' show json;
 
+import 'package:cloud_frontend/network/bean/pagination_base.dart';
+
 import '../utils.dart';
 
-class ExploreBean {
+class ExploreBean extends PaginationBase<ExploreResult> {
   ExploreBean({
     int count,
     String next,
@@ -37,15 +39,19 @@ class ExploreBean {
 
   int _count;
 
+  @override
   int get count => _count;
   String _next;
 
+  @override
   String get next => _next;
   String _previous;
 
+  @override
   String get previous => _previous;
   List<ExploreResult> _results;
 
+  @override
   List<ExploreResult> get results => _results;
 
   Map<String, dynamic> toJson() => <String, dynamic>{

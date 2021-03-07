@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
+import 'package:cloud_frontend/ui/components/explore_data_table.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -12,7 +13,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 mixin _ExplorePageStateMixin<T extends StatefulWidget> on State<T> {
-  bool isSwitchLoading = false;
+  var isSwitchLoading = false;
 
   Future<void> onExploreSwitch(bool value) async {
     try {
@@ -52,9 +53,7 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
       return Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          children: [
-            buildSwitch(mainStore.exploreSwitch),
-          ],
+          children: [buildSwitch(mainStore.exploreSwitch), ExploreDataTable()],
         ),
       );
     });
@@ -68,16 +67,16 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
           duration: const Duration(milliseconds: 500),
           child: isSwitchLoading
               ? const SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.5,
-            ),
-          )
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                  ),
+                )
               : Switch(
-            value: value ?? false,
-            onChanged: onExploreSwitch,
-          ),
+                  value: value ?? false,
+                  onChanged: onExploreSwitch,
+                ),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/bean/explore.dart';
@@ -50,8 +49,8 @@ class Api {
     return UserProfile.fromJson(rsp.data);
   }
 
-  Future<ExploreBean> getExplore() async {
-    final rsp = await _dio.get('explore/');
+  Future<ExploreBean> getExplore([int page]) async {
+    final rsp = await _dio.get('explore/', queryParameters: {'p': page ?? 1});
     return ExploreBean.fromJson(rsp.data);
   }
 }

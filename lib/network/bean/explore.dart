@@ -7,22 +7,22 @@ class ExploreBean {
     int count,
     String next,
     String previous,
-    List<Results> results,
+    List<ExploreResult> results,
   })  : _count = count,
         _next = next,
         _previous = previous,
         _results = results;
 
   factory ExploreBean.fromJson(Map<String, dynamic> jsonRes) {
-    if (jsonRes == null) {
+    if (ExploreBean == null) {
       return null;
     }
-    final List<Results> results =
-        jsonRes['results'] is List ? <Results>[] : null;
+    final List<ExploreResult> results =
+        jsonRes['results'] is List ? <ExploreResult>[] : null;
     if (results != null) {
       for (final dynamic item in jsonRes['results']) {
         if (item != null) {
-          results.add(Results.fromJson(asT<Map<String, dynamic>>(item)));
+          results.add(ExploreResult.fromJson(asT<Map<String, dynamic>>(item)));
         }
       }
     }
@@ -44,9 +44,9 @@ class ExploreBean {
   String _previous;
 
   String get previous => _previous;
-  List<Results> _results;
+  List<ExploreResult> _results;
 
-  List<Results> get results => _results;
+  List<ExploreResult> get results => _results;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'count': _count,
@@ -61,10 +61,11 @@ class ExploreBean {
   }
 }
 
-class Results {
-  Results({
+class ExploreResult {
+  ExploreResult({
     String map,
     int createTime,
+    bool success,
     int oil,
     int ammo,
     int steel,
@@ -75,6 +76,7 @@ class Results {
     int equipmentMap,
   })  : _map = map,
         _createTime = createTime,
+        _success = success,
         _oil = oil,
         _ammo = ammo,
         _steel = steel,
@@ -84,11 +86,12 @@ class Results {
         _buildMap = buildMap,
         _equipmentMap = equipmentMap;
 
-  factory Results.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
+  factory ExploreResult.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
-      : Results(
+      : ExploreResult(
           map: asT<String>(jsonRes['map']),
           createTime: asT<int>(jsonRes['create_time']),
+          success: asT<bool>(jsonRes['success']),
           oil: asT<int>(jsonRes['oil']),
           ammo: asT<int>(jsonRes['ammo']),
           steel: asT<int>(jsonRes['steel']),
@@ -105,6 +108,9 @@ class Results {
   int _createTime;
 
   int get createTime => _createTime;
+  bool _success;
+
+  bool get success => _success;
   int _oil;
 
   int get oil => _oil;
@@ -133,6 +139,7 @@ class Results {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'map': _map,
         'create_time': _createTime,
+        'success': _success,
         'oil': _oil,
         'ammo': _ammo,
         'steel': _steel,

@@ -62,8 +62,8 @@ class _StatisticTableState extends State<StatisticTable> {
   Widget buildTitle() {
     return Stack(
       children: [
-        const Align(
-          child: Text('统计'),
+        Align(
+          child: Text(widget.title),
           alignment: Alignment.center,
         ),
         if (widget.showDate)

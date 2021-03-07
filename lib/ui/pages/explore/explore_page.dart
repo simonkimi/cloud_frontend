@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:smart_select/smart_select.dart';
 
+import 'explore_table.dart';
+
 class ExplorePage extends StatefulWidget {
   @override
   _ExplorePageState createState() => _ExplorePageState();

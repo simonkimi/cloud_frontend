@@ -53,6 +53,15 @@ class Api {
     final rsp = await _dio.get('explore/', queryParameters: {'p': page ?? 1});
     return ExploreBean.fromJson(rsp.data);
   }
+
+  Future<ExploreStatistic> getExploreStatistic(
+      int startTime, int endTime) async {
+    final rsp = await _dio.get('explore/statistic/', queryParameters: {
+      'start_time': startTime,
+      'end_time': endTime,
+    });
+    return ExploreStatistic.fromJson(rsp.data);
+  }
 }
 
 class AuthInterceptor extends InterceptorsWrapper {

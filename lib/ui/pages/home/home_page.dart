@@ -6,6 +6,7 @@ import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer/drawer.dart';
+import 'package:cloud_frontend/ui/components/res_item.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_frontend/utils/time_utils.dart';
@@ -94,20 +95,23 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
           leading: const CircleAvatar(
             backgroundImage: AssetImage('assets/imgs/t.png'),
           ),
-          title: Text('${SERVER_LIST[mainStore.server]} 提督 Lv.${mainStore.level} '),
+          title: Text(
+              '${SERVER_LIST[mainStore.server]} 提督 Lv.${mainStore.level} '),
           subtitle: Text(mainStore.sign),
           trailing: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: isSwitchLoading ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.5,
-              ),
-            ) : Switch(
-              value: mainStore.mainSwitch,
-              onChanged: onSwitchTap,
-            ),
+            child: isSwitchLoading
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                    ),
+                  )
+                : Switch(
+                    value: mainStore.mainSwitch,
+                    onChanged: onSwitchTap,
+                  ),
           ),
         ),
       );
@@ -142,23 +146,6 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
           buildBuildShip(),
           const SizedBox(height: 10),
           buildEquipment()
-        ],
-      ),
-    );
-  }
-
-  Widget buildResItem(String imgPath, String text) {
-    return Expanded(
-      flex: 1,
-      child: Row(
-        children: [
-          Image(
-            image: AssetImage('assets/imgs/$imgPath'),
-            width: 16,
-            height: 16,
-          ),
-          const SizedBox(width: 3),
-          Text(text)
         ],
       ),
     );
@@ -461,42 +448,55 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
               const SizedBox(height: 5),
               Row(
                 children: [
-                  buildResItem(
-                      'you.png', dashBoardData.resource.oil.toString()),
-                  buildResItem(
-                      'dan.png', dashBoardData.resource.ammo.toString()),
-                  buildResItem(
-                      'gang.png', dashBoardData.resource.steel.toString()),
-                  buildResItem(
-                      'lv.png', dashBoardData.resource.aluminium.toString()),
+                  ResItem(
+                      assets: 'you.png',
+                      text: dashBoardData.resource.oil.toString()),
+                  ResItem(
+                      assets: 'dan.png',
+                      text: dashBoardData.resource.ammo.toString()),
+                  ResItem(
+                      assets: 'gang.png',
+                      text: dashBoardData.resource.steel.toString()),
+                  ResItem(
+                      assets: 'lv.png',
+                      text: dashBoardData.resource.aluminium.toString()),
                 ],
               ),
               const SizedBox(height: 5),
               Row(
                 children: [
-                  buildResItem(
-                      'jl.png', dashBoardData.resource.buildMap.toString()),
-                  buildResItem('zblt.png',
-                      dashBoardData.resource.equipmentMap.toString()),
-                  buildResItem(
-                      'kj.png', dashBoardData.resource.fastBuild.toString()),
-                  buildResItem(
-                      'kx.png', dashBoardData.resource.fastRepair.toString()),
+                  ResItem(
+                      assets: 'jl.png',
+                      text: dashBoardData.resource.buildMap.toString()),
+                  ResItem(
+                      assets: 'zblt.png',
+                      text: dashBoardData.resource.equipmentMap.toString()),
+                  ResItem(
+                      assets: 'kj.png',
+                      text: dashBoardData.resource.fastBuild.toString()),
+                  ResItem(
+                      assets: 'kx.png',
+                      text: dashBoardData.resource.fastRepair.toString()),
                 ],
               ),
               const SizedBox(height: 5),
               Row(
                 children: [
-                  buildResItem(
-                      'qz.png', dashBoardData.resource.ddCube.toString()),
-                  buildResItem(
-                      'xy.png', dashBoardData.resource.clCube.toString()),
-                  buildResItem(
-                      'zl.png', dashBoardData.resource.bbCube.toString()),
-                  buildResItem(
-                      'hm.png', dashBoardData.resource.cvCube.toString()),
-                  buildResItem(
-                      'qt.png', dashBoardData.resource.ssCube.toString()),
+                  ResItem(
+                      assets: 'qz.png',
+                      text: dashBoardData.resource.ddCube.toString()),
+                  ResItem(
+                      assets: 'xy.png',
+                      text: dashBoardData.resource.clCube.toString()),
+                  ResItem(
+                      assets: 'zl.png',
+                      text: dashBoardData.resource.bbCube.toString()),
+                  ResItem(
+                      assets: 'hm.png',
+                      text: dashBoardData.resource.cvCube.toString()),
+                  ResItem(
+                      assets: 'qt.png',
+                      text: dashBoardData.resource.ssCube.toString()),
                 ],
               ),
             ],

@@ -16,6 +16,7 @@ mixin _ExploreDataTableStateMixin<T extends StatefulWidget> on State<T> {
   var _totalCount = 0;
   var _loadedPage = 0;
   var _eachPageCount = 0;
+  var _isLoading = false;
   final _exploreList = <ExploreResult>[];
 
   Future<void> loadNextPage() async {
@@ -26,11 +27,18 @@ mixin _ExploreDataTableStateMixin<T extends StatefulWidget> on State<T> {
   }
 
   Future<void> onLoadNextPage() async {
-    _currentPage += 1;
-    if (_currentPage > _loadedPage) {
+    if (_currentPage + 1 > _loadedPage) {
+      setState(() {
+        _isLoading = true;
+      });
       await loadNextPage();
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {});
+    setState(() {
+      _currentPage += 1;
+    });
   }
 
   Future<void> loadFirstPage() async {
@@ -71,7 +79,9 @@ class _ExploreDataTableState extends State<ExploreDataTable>
           const Divider(height: 1),
           Row(
             children: [
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
               Text('${startIndex + 1}~$endIndex of $_totalCount'),
               const Expanded(child: SizedBox()),
               IconButton(
@@ -79,27 +89,30 @@ class _ExploreDataTableState extends State<ExploreDataTable>
                   Icons.arrow_back_ios,
                   size: 18,
                 ),
-                onPressed: _currentPage > 0 ? onLoadPreviewPage : null,
+                onPressed:
+                    _currentPage > 0 && !_isLoading ? onLoadPreviewPage : null,
               ),
               IconButton(
                 icon: const Icon(
                   Icons.arrow_forward_ios,
                   size: 18,
                 ),
-                onPressed: _currentPage < _loadedPage ||
-                        (_totalCount > _exploreList.length)
+                onPressed: (_currentPage < _loadedPage ||
+                            (_totalCount > _exploreList.length)) &&
+                        !_isLoading
                     ? onLoadNextPage
                     : null,
               ),
             ],
-          )
+          ),
+          if (_isLoading)
+            const LinearProgressIndicator()
         ],
       ),
     );
   }
 
   SingleChildScrollView buildDataBody(int startIndex, int endIndex) {
-    print('$startIndex, $endIndex, ${_exploreList.length}');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -118,7 +131,7 @@ class _ExploreDataTableState extends State<ExploreDataTable>
             const AssetImage('assets/imgs/kx.png'): data.fastRepair,
             const AssetImage('assets/imgs/kj.png'): data.fastBuild,
             const AssetImage('assets/imgs/jl.png'): data.buildMap,
-            const AssetImage('assets/imgs/zl.png'): data.equipmentMap
+            const AssetImage('assets/imgs/zblt.png'): data.equipmentMap
           }..removeWhere((key, value) => value == 0);
           final resList = resAssets.keys.map((e) => [e, resAssets[e]]).toList();
 
@@ -148,7 +161,8 @@ class _ExploreDataTableState extends State<ExploreDataTable>
                 );
               }).toList(),
             )),
-            DataCell(Text(DateFormat('MM-dd HH:mm:ss').format(data.createTime.bySeconds))),
+            DataCell(Text(DateFormat('MM-dd HH:mm:ss')
+                .format(data.createTime.bySeconds))),
           ]);
         }).toList(),
       ),

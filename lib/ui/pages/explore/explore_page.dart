@@ -2,7 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/utils.dart';
-import 'file:///H:/Web/cloud_frontend/lib/ui/components/drawer.dart';
+import 'package:cloud_frontend/ui/components/drawer.dart';
 import 'package:cloud_frontend/ui/components/statistic_table.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

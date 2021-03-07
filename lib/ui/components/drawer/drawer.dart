@@ -19,7 +19,7 @@ class MainDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                     image: DecorationImage(
                         fit: BoxFit.fitHeight,
-                        image: AssetImage('assets/imgs/header.jpg'))),
+                        image: AssetImage('assets/img/header.jpg'))),
               ),
               Expanded(
                 child: ListView(

@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
       return Card(
         child: ListTile(
           leading: const CircleAvatar(
-            backgroundImage: AssetImage('assets/imgs/t.png'),
+            backgroundImage: AssetImage('assets/img/t.png'),
           ),
           title: Text(
               '${SERVER_LIST[mainStore.server]} 提督 Lv.${mainStore.level} '),
@@ -449,16 +449,16 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
               Row(
                 children: [
                   ResItem(
-                      assets: 'you.png',
+                      assets: 'oil.png',
                       text: dashBoardData.resource.oil.toString()),
                   ResItem(
-                      assets: 'dan.png',
+                      assets: 'ammo.png',
                       text: dashBoardData.resource.ammo.toString()),
                   ResItem(
-                      assets: 'gang.png',
+                      assets: 'steel.png',
                       text: dashBoardData.resource.steel.toString()),
                   ResItem(
-                      assets: 'lv.png',
+                      assets: 'aluminium.png',
                       text: dashBoardData.resource.aluminium.toString()),
                 ],
               ),
@@ -466,16 +466,16 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
               Row(
                 children: [
                   ResItem(
-                      assets: 'jl.png',
+                      assets: 'build_blueprint.png',
                       text: dashBoardData.resource.buildMap.toString()),
                   ResItem(
-                      assets: 'zblt.png',
+                      assets: 'equipment_blueprint.png',
                       text: dashBoardData.resource.equipmentMap.toString()),
                   ResItem(
-                      assets: 'kj.png',
+                      assets: 'fast_build.png',
                       text: dashBoardData.resource.fastBuild.toString()),
                   ResItem(
-                      assets: 'kx.png',
+                      assets: 'fast_repair.png',
                       text: dashBoardData.resource.fastRepair.toString()),
                 ],
               ),
@@ -483,19 +483,19 @@ class _HomePageState extends State<HomePage> with _HomePageStateMixin {
               Row(
                 children: [
                   ResItem(
-                      assets: 'qz.png',
+                      assets: 'dd_cube.png',
                       text: dashBoardData.resource.ddCube.toString()),
                   ResItem(
-                      assets: 'xy.png',
+                      assets: 'cl_cube.png',
                       text: dashBoardData.resource.clCube.toString()),
                   ResItem(
-                      assets: 'zl.png',
+                      assets: 'bb_cube.png',
                       text: dashBoardData.resource.bbCube.toString()),
                   ResItem(
-                      assets: 'hm.png',
+                      assets: 'cv_cube.png',
                       text: dashBoardData.resource.cvCube.toString()),
                   ResItem(
-                      assets: 'qt.png',
+                      assets: 'ss_cube.png',
                       text: dashBoardData.resource.ssCube.toString()),
                 ],
               ),

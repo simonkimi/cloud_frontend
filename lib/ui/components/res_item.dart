@@ -12,7 +12,7 @@ class ResItem extends StatelessWidget {
       child: Row(
         children: [
           Image(
-            image: AssetImage('assets/imgs/$assets'),
+            image: AssetImage('assets/img/$assets'),
             width: 16,
             height: 16,
           ),

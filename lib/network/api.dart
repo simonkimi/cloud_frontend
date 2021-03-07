@@ -2,6 +2,7 @@ import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/bean/explore.dart';
 import 'package:cloud_frontend/network/bean/mine.dart';
+import 'package:cloud_frontend/network/bean/statistic.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
 
@@ -54,13 +55,13 @@ class Api {
     return ExploreBean.fromJson(rsp.data);
   }
 
-  Future<ExploreStatistic> getExploreStatistic(
+  Future<StatisticBean> getExploreStatistic(
       int startTime, int endTime) async {
     final rsp = await _dio.get('explore/statistic/', queryParameters: {
       'start_time': startTime,
       'end_time': endTime,
     });
-    return ExploreStatistic.fromJson(rsp.data);
+    return StatisticBean.fromJson(rsp.data);
   }
 }
 

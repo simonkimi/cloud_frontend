@@ -1,5 +1,7 @@
 import 'dart:convert' show json;
 
+import 'package:cloud_frontend/network/bean/statistic.dart';
+
 import '../utils.dart';
 
 class DashBoardBean {
@@ -55,7 +57,7 @@ class DashBoardBean {
 
     return DashBoardBean(
       resource:
-          Resource.fromJson(asT<Map<String, dynamic>>(jsonRes['resource'])),
+      StatisticBean.fromJson(asT<Map<String, dynamic>>(jsonRes['resource'])),
       explore: explore,
       repair: repair,
       build: build,
@@ -63,7 +65,7 @@ class DashBoardBean {
     );
   }
 
-  Resource resource;
+  StatisticBean resource;
   List<Explore> explore;
   List<Repair> repair;
   List<Build> build;
@@ -75,77 +77,6 @@ class DashBoardBean {
         'repair': repair,
         'build': build,
         'equipment': equipment,
-      };
-
-  @override
-  String toString() {
-    return json.encode(this);
-  }
-}
-
-class Resource {
-  Resource({
-    this.oil,
-    this.ammo,
-    this.steel,
-    this.aluminium,
-    this.ddCube,
-    this.clCube,
-    this.bbCube,
-    this.cvCube,
-    this.ssCube,
-    this.fastRepair,
-    this.fastBuild,
-    this.buildMap,
-    this.equipmentMap,
-  });
-
-  factory Resource.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
-      ? null
-      : Resource(
-          oil: asT<int>(jsonRes['oil']),
-          ammo: asT<int>(jsonRes['ammo']),
-          steel: asT<int>(jsonRes['steel']),
-          aluminium: asT<int>(jsonRes['aluminium']),
-          ddCube: asT<int>(jsonRes['dd_cube']),
-          clCube: asT<int>(jsonRes['cl_cube']),
-          bbCube: asT<int>(jsonRes['bb_cube']),
-          cvCube: asT<int>(jsonRes['cv_cube']),
-          ssCube: asT<int>(jsonRes['ss_cube']),
-          fastRepair: asT<int>(jsonRes['fast_repair']),
-          fastBuild: asT<int>(jsonRes['fast_build']),
-          buildMap: asT<int>(jsonRes['build_map']),
-          equipmentMap: asT<int>(jsonRes['equipment_map']),
-        );
-
-  int oil;
-  int ammo;
-  int steel;
-  int aluminium;
-  int ddCube;
-  int clCube;
-  int bbCube;
-  int cvCube;
-  int ssCube;
-  int fastRepair;
-  int fastBuild;
-  int buildMap;
-  int equipmentMap;
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'oil': oil,
-        'ammo': ammo,
-        'steel': steel,
-        'aluminium': aluminium,
-        'dd_cube': ddCube,
-        'cl_cube': clCube,
-        'bb_cube': bbCube,
-        'cv_cube': cvCube,
-        'ss_cube': ssCube,
-        'fast_repair': fastRepair,
-        'fast_build': fastBuild,
-        'build_map': buildMap,
-        'equipment_map': equipmentMap,
       };
 
   @override

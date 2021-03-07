@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:cloud_frontend/network/bean/pagination_base.dart';
 import 'package:flutter/material.dart';
 
-
 typedef AsyncFunction<T> = Future<T> Function(int page);
 
 typedef ItemBuilder<T> = DataRow Function(T value);
@@ -18,13 +17,13 @@ class PaginatedTable<T, E extends PaginationBase<T>> extends StatefulWidget {
 
   final AsyncFunction<E> onLoadNextPage;
   final List<DataColumn> columns;
-  final ItemBuilder<dynamic> itemBuilder;
+  final ItemBuilder<T> itemBuilder;
 
   @override
-  _PaginatedTableState createState() => _PaginatedTableState<T, E>();
+  _PaginatedTableState<T, E> createState() => _PaginatedTableState<T, E>();
 }
 
-class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<PaginatedTable> {
+class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<PaginatedTable<T, E>> {
   var _currentPage = 0;
   var _totalCount = 0;
   var _loadedPage = 0;
@@ -41,7 +40,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
   Future<void> loadNextPage() async {
     _loadedPage += 1;
     final result = await widget.onLoadNextPage(_loadedPage + 1);
-    _list.addAll(result.results as List<T>);
+    _list.addAll(result.results);
     setState(() {});
   }
 
@@ -68,7 +67,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
 
   Future<void> loadFirstPage() async {
     final result = await widget.onLoadNextPage(1);
-    _list.addAll(result.results as List<T>);
+    _list.addAll(result.results);
     _currentPage = 0;
     _loadedPage = 0;
     _totalCount = result.count;
@@ -128,7 +127,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
         columns: widget.columns,
         rows: _list
             .sublist(startIndex, endIndex)
-            .map<DataRow>((T e) => widget.itemBuilder(e))
+            .map<DataRow>(widget.itemBuilder)
             .toList(),
       ),
     );

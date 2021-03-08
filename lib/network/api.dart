@@ -15,7 +15,7 @@ final api = Api();
 class Api {
   final _dio = Dio()
     ..options.baseUrl = baseUrl
-    ..options.connectTimeout = 1000 * 30
+    ..options.connectTimeout =  10 * 1000
     ..interceptors.add(AuthInterceptor());
 
   Future<TokenBean> register(

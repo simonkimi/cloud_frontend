@@ -1,5 +1,8 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/network/bean/statistic.dart';
+import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/res_row.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -23,7 +26,9 @@ class StatisticTable extends StatefulWidget {
 }
 
 class _StatisticTableState extends State<StatisticTable> {
-  var isStatisticLoading = false;
+  var _isStatisticLoading = false;
+  var _isLoadFail = true;
+  var _current = 0;
   StatisticBean _statistic;
 
   @override
@@ -34,12 +39,48 @@ class _StatisticTableState extends State<StatisticTable> {
 
   Future<void> loadStatistic(int startTime, int endTime) async {
     setState(() {
-      isStatisticLoading = true;
+      _isStatisticLoading = true;
     });
-    final data = await widget.onLoadStatistic(startTime, endTime);
-    _statistic = data;
-    isStatisticLoading = false;
-    setState(() {});
+    try {
+      final data = await widget.onLoadStatistic(startTime, endTime);
+      _statistic = data;
+      _isStatisticLoading = false;
+      setState(() {});
+    } on DioError catch (e) {
+      BotToast.showText(text: getDioErr(e));
+      setState(() {
+        _isLoadFail = true;
+      });
+    }
+  }
+
+  Widget buildFail() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _isLoadFail = false;
+        });
+        loadTimeStatistic(_current);
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.error_outline,
+              size: 32,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text('点击重试')
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> loadTimeStatistic(int type) async {
@@ -91,7 +132,12 @@ class _StatisticTableState extends State<StatisticTable> {
                 S2Choice(value: 4, title: '全部'),
               ],
               value: 1,
-              onChange: (value) => loadTimeStatistic(value.value),
+              onChange: (value) {
+                loadTimeStatistic(value.value);
+                setState(() {
+                  _current = value.value;
+                });
+              },
             ),
           )
       ],
@@ -109,12 +155,15 @@ class _StatisticTableState extends State<StatisticTable> {
             children: [
               buildTitle(),
               const SizedBox(height: 5),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                child: _statistic != null && !isStatisticLoading
-                    ? buildStatisticNotNull()
-                    : buildStatisticLoading(),
-              )
+              if (_isLoadFail)
+                buildFail(),
+              if (!_isLoadFail)
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: _statistic != null && !_isStatisticLoading
+                      ? buildStatisticNotNull()
+                      : buildStatisticLoading(),
+                )
             ],
           ),
         ),

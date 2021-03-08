@@ -98,28 +98,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>>
       child: Column(
         children: [
           if (!_loadFail) buildDataBody(startIndex, endIndex),
-          if (_loadFail)
-            InkWell(
-              onTap: () {
-                setState(() {
-                  _loadFail = false;
-                });
-                loadNextPage();
-              },
-              child: SizedBox(
-                width: double.infinity,
-                height: 300,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.error_outline, size: 32,),
-                    SizedBox(height: 5,),
-                    Text('点击重试')
-                  ],
-                ),
-              ),
-            ),
+          if (_loadFail) buildLoadFail(),
           const Divider(height: 1),
           Row(
             children: [
@@ -134,7 +113,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>>
                   size: 18,
                 ),
                 onPressed:
-                _currentPage > 0 && !_isLoading ? onLoadPreviewPage : null,
+                    _currentPage > 0 && !_isLoading ? onLoadPreviewPage : null,
               ),
               IconButton(
                 icon: const Icon(
@@ -142,8 +121,8 @@ class _PaginatedTableState<T, E extends PaginationBase<T>>
                   size: 18,
                 ),
                 onPressed: (_currentPage < _loadedPage ||
-                    (_totalCount > _list.length)) &&
-                    !_isLoading
+                            (_totalCount > _list.length)) &&
+                        !_isLoading
                     ? onLoadNextPage
                     : null,
               ),
@@ -151,6 +130,35 @@ class _PaginatedTableState<T, E extends PaginationBase<T>>
           ),
           if (_isLoading) const LinearProgressIndicator()
         ],
+      ),
+    );
+  }
+
+  InkWell buildLoadFail() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _loadFail = false;
+        });
+        loadNextPage();
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.error_outline,
+              size: 32,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text('点击重试')
+          ],
+        ),
       ),
     );
   }

@@ -27,7 +27,7 @@ class StatisticTable extends StatefulWidget {
 
 class _StatisticTableState extends State<StatisticTable> {
   var _isStatisticLoading = false;
-  var _isLoadFail = true;
+  var _isLoadFail = false;
   var _current = 0;
   StatisticBean _statistic;
 
@@ -110,34 +110,37 @@ class _StatisticTableState extends State<StatisticTable> {
         if (widget.showDate)
           Align(
             alignment: Alignment.centerRight,
-            child: SmartSelect<int>.single(
-              title: '统计时间',
-              modalType: S2ModalType.popupDialog,
-              tileBuilder: (context, state) {
-                return InkWell(
-                  child: const Icon(
-                    Icons.date_range,
-                    size: 18,
-                    color: Color(0xFF222222),
-                  ),
-                  onTap: () {
-                    state.showModal();
-                  },
-                );
-              },
-              choiceItems: [
-                S2Choice(value: 1, title: '今日'),
-                S2Choice(value: 2, title: '24小时'),
-                S2Choice(value: 3, title: '一周'),
-                S2Choice(value: 4, title: '全部'),
-              ],
-              value: 1,
-              onChange: (value) {
-                loadTimeStatistic(value.value);
-                setState(() {
-                  _current = value.value;
-                });
-              },
+            child: IgnorePointer(
+              ignoring: _isStatisticLoading,
+              child: SmartSelect<int>.single(
+                title: '统计时间',
+                modalType: S2ModalType.popupDialog,
+                tileBuilder: (context, state) {
+                  return InkWell(
+                    child: const Icon(
+                      Icons.date_range,
+                      size: 18,
+                      color: Color(0xFF222222),
+                    ),
+                    onTap: () {
+                      state.showModal();
+                    },
+                  );
+                },
+                choiceItems: [
+                  S2Choice(value: 1, title: '今日'),
+                  S2Choice(value: 2, title: '24小时'),
+                  S2Choice(value: 3, title: '一周'),
+                  S2Choice(value: 4, title: '全部'),
+                ],
+                value: 1,
+                onChange: (value) {
+                  loadTimeStatistic(value.value);
+                  setState(() {
+                    _current = value.value;
+                  });
+                },
+              ),
             ),
           )
       ],

@@ -123,12 +123,14 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
   Widget buildDataBody(int startIndex, int endIndex) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: widget.columns,
-        rows: _list
-            .sublist(startIndex, endIndex)
-            .map<DataRow>(widget.itemBuilder)
-            .toList(),
+      child: Container(
+        child: DataTable(
+          columns: widget.columns,
+          rows: _list
+              .sublist(startIndex, endIndex)
+              .map<DataRow>(widget.itemBuilder)
+              .toList(),
+        ),
       ),
     );
   }

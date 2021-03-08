@@ -2,6 +2,7 @@ import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/bean/explore.dart';
 import 'package:cloud_frontend/network/bean/mine.dart';
+import 'package:cloud_frontend/network/bean/repair.dart';
 import 'package:cloud_frontend/network/bean/statistic.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
@@ -50,9 +51,20 @@ class Api {
     return UserProfile.fromJson(rsp.data);
   }
 
+  Future<UserProfile> setRepairSwitch(bool value) async {
+    final rsp =
+    await _dio.post('user/setting/', data: {'repair_switch': value});
+    return UserProfile.fromJson(rsp.data);
+  }
+
   Future<ExploreBean> getExplore([int page]) async {
     final rsp = await _dio.get('explore/', queryParameters: {'p': page ?? 1});
     return ExploreBean.fromJson(rsp.data);
+  }
+
+  Future<RepairBean> getRepair([int page]) async {
+    final rsp = await _dio.get('repair/', queryParameters: {'p': page ?? 1});
+    return RepairBean.fromJson(rsp.data);
   }
 
   Future<StatisticBean> getExploreStatistic(

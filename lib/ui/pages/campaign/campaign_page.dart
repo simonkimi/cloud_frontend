@@ -1,7 +1,17 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/constant.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/network/api.dart';
+import 'package:cloud_frontend/network/bean/campaign.dart';
+import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer.dart';
 import 'package:cloud_frontend/ui/components/loading_button.dart';
+import 'package:cloud_frontend/ui/components/paginated_table.dart';
+import 'package:cloud_frontend/ui/components/res_row.dart';
+import 'package:cloud_frontend/ui/components/statistic_table.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_frontend/utils/time_utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -10,15 +20,36 @@ class CampaignPage extends StatefulWidget {
   _CampaignPageState createState() => _CampaignPageState();
 }
 
-class _CampaignPageState extends State<CampaignPage> {
+mixin _CampaignPageStateMixin<T extends StatefulWidget> on State<T> {
   int campaignMap;
   int campaignFormat;
 
+  void initStoreState() {
+    campaignMap = mainStore.campaignMap;
+    campaignFormat = mainStore.campaignFormat;
+  }
+
+  Future<void> setCampaign() async {
+    try {
+      await mainStore.setCampaignSetting(campaignMap, campaignFormat);
+      setState(() {
+        initStoreState();
+      });
+      BotToast.showText(text: '设置成功');
+    } on DioError catch(e) {
+      BotToast.showText(text: getDioErr(e));
+    } catch(e) {
+      BotToast.showText(text: e.toString());
+    }
+  }
+}
+
+class _CampaignPageState extends State<CampaignPage>
+    with _CampaignPageStateMixin {
   @override
   void initState() {
     super.initState();
-    campaignMap = mainStore.campaignMap;
-    campaignFormat = mainStore.campaignFormat;
+    initStoreState();
   }
 
   @override
@@ -32,12 +63,53 @@ class _CampaignPageState extends State<CampaignPage> {
 
   Widget buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       child: ListView(
+        cacheExtent: 9999,
         children: [
           buildSettingCard(),
+          buildStatistic(),
+          buildTable()
         ],
       ),
+    );
+  }
+
+  Widget buildStatistic() {
+    return StatisticTable(
+      onLoadStatistic: api.getCampaignStatistic,
+      title: '战役统计',
+      showDate: true,
+      line: 2,
+    );
+  }
+
+  Widget buildTable() {
+    return PaginatedTable<CampaignResults, CampaignBean>(
+      columns: const [
+        DataColumn(label: Text('地图')),
+        DataColumn(label: Text('资源')),
+        DataColumn(label: Text('时间')),
+      ],
+      onLoadNextPage: api.getCampaign,
+      itemBuilder: (CampaignResults data) {
+        return DataRow(cells: [
+          DataCell(Text(data.map)),
+          DataCell(ResRow(
+            oil: data.oil,
+            ammo: data.ammo,
+            steel: data.steel,
+            aluminium: data.aluminium,
+            ddCube: data.ddCube,
+            clCube: data.clCube,
+            bbCube: data.bbCube,
+            cvCube: data.cvCube,
+            ssCube: data.ssCube,
+          )),
+          DataCell(Text(
+              DateFormat('MM-dd HH:mm:ss').format(data.createTime.bySeconds))),
+        ]);
+      },
     );
   }
 
@@ -55,7 +127,7 @@ class _CampaignPageState extends State<CampaignPage> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          const Text('设置', style: TextStyle(fontSize: 15)),
+          const Text('设置'),
           SmartSelect<int>.single(
             title: '战役地图',
             modalType: S2ModalType.popupDialog,
@@ -88,9 +160,7 @@ class _CampaignPageState extends State<CampaignPage> {
                   height: 35,
                   child: LoadingButton(
                     child: const Text('确定'),
-                    onPressed: () async {
-                      await Future.delayed(const Duration(seconds: 3));
-                    },
+                    onPressed: setCampaign,
                   ),
                 )
               ],

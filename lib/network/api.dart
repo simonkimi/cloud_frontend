@@ -1,4 +1,5 @@
 import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/network/bean/campaign.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/bean/explore.dart';
 import 'package:cloud_frontend/network/bean/mine.dart';
@@ -51,9 +52,15 @@ class Api {
     return UserProfile.fromJson(rsp.data);
   }
 
+  Future<UserProfile> setCampaignSetting(int map, int formats) async {
+    final rsp = await _dio.post('user/setting/',
+        data: {'campaign_map': map, 'campaign_format': formats});
+    return UserProfile.fromJson(rsp.data);
+  }
+
   Future<UserProfile> setRepairSwitch(bool value) async {
     final rsp =
-    await _dio.post('user/setting/', data: {'repair_switch': value});
+        await _dio.post('user/setting/', data: {'repair_switch': value});
     return UserProfile.fromJson(rsp.data);
   }
 
@@ -62,14 +69,26 @@ class Api {
     return ExploreBean.fromJson(rsp.data);
   }
 
+  Future<CampaignBean> getCampaign([int page]) async {
+    final rsp = await _dio.get('campaign/', queryParameters: {'p': page ?? 1});
+    return CampaignBean.fromJson(rsp.data);
+  }
+
   Future<RepairBean> getRepair([int page]) async {
     final rsp = await _dio.get('repair/', queryParameters: {'p': page ?? 1});
     return RepairBean.fromJson(rsp.data);
   }
 
-  Future<StatisticBean> getExploreStatistic(
-      int startTime, int endTime) async {
+  Future<StatisticBean> getExploreStatistic(int startTime, int endTime) async {
     final rsp = await _dio.get('explore/statistic/', queryParameters: {
+      'start_time': startTime,
+      'end_time': endTime,
+    });
+    return StatisticBean.fromJson(rsp.data);
+  }
+
+  Future<StatisticBean> getCampaignStatistic(int startTime, int endTime) async {
+    final rsp = await _dio.get('campaign/statistic/', queryParameters: {
       'start_time': startTime,
       'end_time': endTime,
     });

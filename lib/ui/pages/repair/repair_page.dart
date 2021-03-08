@@ -1,9 +1,12 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/bean/repair.dart';
+import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer.dart';
 import 'package:cloud_frontend/ui/components/loading_switch_tile.dart';
 import 'package:cloud_frontend/ui/components/paginated_table.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +53,15 @@ class _RepairPageState extends State<RepairPage> {
       child: LoadingSwitchTile(
         title: const Text('修理开关'),
         value: mainStore.repairSwitch,
-        onChange: mainStore.setRepairSwitch,
+        onChange: (value) async {
+          try {
+            await mainStore.setRepairSwitch(value);
+          } on DioError catch (e) {
+            BotToast.showText(text: getDioErr(e));
+          } catch (e) {
+            BotToast.showText(text: e.toString());
+          }
+        },
       ),
     );
   }

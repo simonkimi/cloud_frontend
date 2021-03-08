@@ -101,6 +101,12 @@ abstract class MainStoreBase with Store {
   }
 
   @action
+  Future<void> setCampaignSetting(int map, int formats) async {
+    final profile = await api.setCampaignSetting(map, formats);
+    await setUserProfile(profile);
+  }
+
+  @action
   Future<void> login(String username, String password) async {
     this.username = username;
     this.password = username;

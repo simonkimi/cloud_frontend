@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/network/bean/pagination_base.dart';
+import 'package:cloud_frontend/network/utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 typedef AsyncFunction<T> = Future<T> Function(int page);
@@ -23,12 +26,14 @@ class PaginatedTable<T, E extends PaginationBase<T>> extends StatefulWidget {
   _PaginatedTableState<T, E> createState() => _PaginatedTableState<T, E>();
 }
 
-class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<PaginatedTable<T, E>> {
+class _PaginatedTableState<T, E extends PaginationBase<T>>
+    extends State<PaginatedTable<T, E>> {
   var _currentPage = 0;
   var _totalCount = 0;
   var _loadedPage = 0;
   var _eachPageCount = 0;
   var _isLoading = false;
+  var _loadFail = false;
   final _list = <T>[];
 
   @override
@@ -38,10 +43,18 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
   }
 
   Future<void> loadNextPage() async {
-    _loadedPage += 1;
-    final result = await widget.onLoadNextPage(_loadedPage + 1);
-    _list.addAll(result.results);
-    setState(() {});
+    try {
+      _loadedPage += 1;
+      final result = await widget.onLoadNextPage(_loadedPage + 1);
+      _list.addAll(result.results);
+      setState(() {});
+    } on DioError catch (e) {
+      BotToast.showText(text: getDioErr(e));
+      setState(() {
+        _loadFail = true;
+        _loadedPage -= 1;
+      });
+    }
   }
 
   Future<void> onLoadPreviewPage() async {
@@ -84,7 +97,29 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
     return Card(
       child: Column(
         children: [
-          buildDataBody(startIndex, endIndex),
+          if (!_loadFail) buildDataBody(startIndex, endIndex),
+          if (_loadFail)
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _loadFail = false;
+                });
+                loadNextPage();
+              },
+              child: SizedBox(
+                width: double.infinity,
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.error_outline, size: 32,),
+                    SizedBox(height: 5,),
+                    Text('点击重试')
+                  ],
+                ),
+              ),
+            ),
           const Divider(height: 1),
           Row(
             children: [
@@ -99,7 +134,7 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
                   size: 18,
                 ),
                 onPressed:
-                    _currentPage > 0 && !_isLoading ? onLoadPreviewPage : null,
+                _currentPage > 0 && !_isLoading ? onLoadPreviewPage : null,
               ),
               IconButton(
                 icon: const Icon(
@@ -107,8 +142,8 @@ class _PaginatedTableState<T, E extends PaginationBase<T>> extends State<Paginat
                   size: 18,
                 ),
                 onPressed: (_currentPage < _loadedPage ||
-                            (_totalCount > _list.length)) &&
-                        !_isLoading
+                    (_totalCount > _list.length)) &&
+                    !_isLoading
                     ? onLoadNextPage
                     : null,
               ),

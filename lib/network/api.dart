@@ -6,7 +6,7 @@ import 'package:cloud_frontend/network/bean/statistic.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
 
-const baseUrl = 'http://192.168.2.244:8000/api/';
+const baseUrl = 'http://192.168.2.242:8000/api/';
 
 final api = Api();
 

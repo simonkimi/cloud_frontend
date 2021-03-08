@@ -3,6 +3,7 @@ import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer.dart';
+import 'package:cloud_frontend/ui/components/loading_switch_tile.dart';
 import 'package:cloud_frontend/ui/components/statistic_table.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
       return Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
+          cacheExtent: 9999,
           children: [
             buildSwitch(mainStore.exploreSwitch),
             StatisticTable(
@@ -72,23 +74,10 @@ class _ExplorePageState extends State<ExplorePage> with _ExplorePageStateMixin {
 
   Card buildSwitch(bool value) {
     return Card(
-      child: ListTile(
+      child: LoadingSwitchTile(
         title: const Text('远征开关'),
-        trailing: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          child: isSwitchLoading
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                  ),
-                )
-              : Switch(
-                  value: value ?? false,
-                  onChanged: onExploreSwitch,
-                ),
-        ),
+        value: value ?? false,
+        onChange: onExploreSwitch,
       ),
     );
   }

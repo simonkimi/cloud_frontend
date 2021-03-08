@@ -3,6 +3,7 @@ import 'package:cloud_frontend/data/constant.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer.dart';
+import 'package:cloud_frontend/ui/components/loading_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -18,15 +19,8 @@ mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
   final _passwordController = TextEditingController();
   int server = 0;
   bool isLoginPage = true;
-  bool isLoading = false;
 
   Future<void> onLogin() async {
-    if (isLoading) {
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
     try {
       final username = _usernameController.value.text;
       final password = _passwordController.value.text;
@@ -40,20 +34,10 @@ mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
     } on DioError catch (e) {
       print(e);
       BotToast.showText(text: getDioErr(e));
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
   Future<void> onRegister() async {
-    if (isLoading) {
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
     try {
       final username = _usernameController.value.text;
       final password = _passwordController.value.text;
@@ -66,10 +50,6 @@ mixin _LoginPageStateMixin<T extends StatefulWidget> on State<T> {
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } on DioError catch (e) {
       BotToast.showText(text: getDioErr(e));
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 }
@@ -154,11 +134,9 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                   children: [
                     TextButton(
                       onPressed: () {
-                        if (!isLoading) {
-                          setState(() {
-                            isLoginPage = true;
-                          });
-                        }
+                        setState(() {
+                          isLoginPage = true;
+                        });
                       },
                       child: const Text('已有账号?'),
                       style: ButtonStyle(
@@ -170,24 +148,9 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                     SizedBox(
                       width: 65,
                       height: 35,
-                      child: TextButton(
+                      child: LoadingButton(
+                        child: const Text('注册'),
                         onPressed: onRegister,
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  backgroundColor: Colors.white,
-                                  strokeWidth: 2.5,
-                                ),
-                              )
-                            : const Text('注册'),
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor),
-                        ),
                       ),
                     )
                   ],
@@ -229,11 +192,9 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                   children: [
                     TextButton(
                       onPressed: () {
-                        if (!isLoading) {
-                          setState(() {
-                            isLoginPage = false;
-                          });
-                        }
+                        setState(() {
+                          isLoginPage = false;
+                        });
                       },
                       child: const Text('注册'),
                       style: ButtonStyle(
@@ -245,25 +206,10 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                     SizedBox(
                       width: 65,
                       height: 35,
-                      child: TextButton(
+                      child: LoadingButton(
+                        child: const Text('登录'),
                         onPressed: onLogin,
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  backgroundColor: Colors.white,
-                                  strokeWidth: 2.5,
-                                ),
-                              )
-                            : const Text('登录'),
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor),
-                        ),
-                      ),
+                      )
                     )
                   ],
                 )

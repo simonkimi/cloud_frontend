@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/ui/pages/campaign/campaign_page.dart';
 import 'package:cloud_frontend/ui/pages/explore/explore_page.dart';
 import 'package:cloud_frontend/ui/pages/home/home_page.dart';
 import 'package:cloud_frontend/ui/pages/login/login_page.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         'login/': (context) => LoginPage(),
         'explore/': (context) => ExplorePage(),
         'repair/': (context) => RepairPage(),
+        'campaign/': (context) => CampaignPage(),
       },
     );
   }

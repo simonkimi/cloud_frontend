@@ -1,21 +1,25 @@
 import 'package:cloud_frontend/data/store/main_store.dart';
+import 'package:cloud_frontend/network/bean/build.dart';
 import 'package:cloud_frontend/network/bean/campaign.dart';
 import 'package:cloud_frontend/network/bean/dashboard.dart';
 import 'package:cloud_frontend/network/bean/explore.dart';
 import 'package:cloud_frontend/network/bean/mine.dart';
+import 'package:cloud_frontend/network/bean/pvp.dart';
 import 'package:cloud_frontend/network/bean/repair.dart';
 import 'package:cloud_frontend/network/bean/statistic.dart';
 import 'package:cloud_frontend/network/bean/token.dart';
 import 'package:dio/dio.dart';
 
-const baseUrl = 'http://192.168.2.242:8000/api/';
+import 'bean/equipment.dart';
+
+const baseUrl = 'http://192.168.2.242:8000/v2/';
 
 final api = Api();
 
 class Api {
   final _dio = Dio()
     ..options.baseUrl = baseUrl
-    ..options.connectTimeout =  10 * 1000
+    ..options.connectTimeout = 10 * 1000
     ..interceptors.add(AuthInterceptor());
 
   Future<TokenBean> register(
@@ -58,9 +62,43 @@ class Api {
     return UserProfile.fromJson(rsp.data);
   }
 
+  Future<UserProfile> setPvpSetting(
+      int fleet, int formats, bool isNight) async {
+    final rsp = await _dio.post('user/setting/', data: {
+      'pvp_fleet': fleet,
+      'pvp_format': formats,
+      'pvp_night': isNight
+    });
+    return UserProfile.fromJson(rsp.data);
+  }
+
   Future<UserProfile> setRepairSwitch(bool value) async {
     final rsp =
         await _dio.post('user/setting/', data: {'repair_switch': value});
+    return UserProfile.fromJson(rsp.data);
+  }
+
+  Future<UserProfile> setBuildSetting(
+      bool value, int oil, int ammo, int steel, int aluminium) async {
+    final rsp = await _dio.post('user/setting/', data: {
+      'build_switch': value,
+      'build_oil': oil,
+      'build_ammo': ammo,
+      'build_steel': steel,
+      'build_aluminium': aluminium
+    });
+    return UserProfile.fromJson(rsp.data);
+  }
+
+  Future<UserProfile> setEquipmentSetting(
+      bool value, int oil, int ammo, int steel, int aluminium) async {
+    final rsp = await _dio.post('user/setting/', data: {
+      'equipment_switch': value,
+      'equipment_oil': oil,
+      'equipment_ammo': ammo,
+      'equipment_steel': steel,
+      'equipment_aluminium': aluminium
+    });
     return UserProfile.fromJson(rsp.data);
   }
 
@@ -77,6 +115,22 @@ class Api {
   Future<RepairBean> getRepair([int page]) async {
     final rsp = await _dio.get('repair/', queryParameters: {'p': page ?? 1});
     return RepairBean.fromJson(rsp.data);
+  }
+
+  Future<PvpBean> getPvp([int page]) async {
+    final rsp = await _dio.get('pvp/', queryParameters: {'p': page ?? 1});
+    return PvpBean.fromJson(rsp.data);
+  }
+
+  Future<BuildBean> getBuild([int page]) async {
+    final rsp = await _dio.get('build/', queryParameters: {'p': page ?? 1});
+    return BuildBean.fromJson(rsp.data);
+  }
+
+  Future<EquipmentBean> getEquipment([int page]) async {
+    final rsp =
+        await _dio.get('development/', queryParameters: {'p': page ?? 1});
+    return EquipmentBean.fromJson(rsp.data);
   }
 
   Future<StatisticBean> getExploreStatistic(int startTime, int endTime) async {

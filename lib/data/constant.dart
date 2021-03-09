@@ -49,3 +49,13 @@ const FLEET_FORMAT = <int, String>{
   4: '梯形',
   5: '单横',
 };
+
+const PVP_RESULT = <int, String>{
+  0: '-',
+  1: 'SS',
+  2: 'S',
+  3: 'A',
+  4: 'B',
+  5: 'C',
+  6: 'D'
+};

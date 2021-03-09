@@ -86,11 +86,23 @@ class MainDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.build),
-                      title: const Text('开发/建造'),
+                      title: const Text('建造'),
                       onTap: () {
                         if (tag != 'build') {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               'build/', (route) => false);
+                        } else {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings_applications_outlined),
+                      title: const Text('开发'),
+                      onTap: () {
+                        if (tag != 'equipment') {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              'equipment/', (route) => false);
                         } else {
                           Navigator.of(context).pop();
                         }

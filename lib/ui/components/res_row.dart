@@ -16,6 +16,7 @@ class ResRow extends StatelessWidget {
     this.equipmentBlueprint = 0,
     this.fastBuild = 0,
     this.fastRepair = 0,
+    this.mainAxisAlignment = MainAxisAlignment.start,
   }) : super(key: key);
   final int oil;
   final int ammo;
@@ -30,6 +31,7 @@ class ResRow extends StatelessWidget {
   final int equipmentBlueprint;
   final int fastBuild;
   final int fastRepair;
+  final MainAxisAlignment mainAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class ResRow extends StatelessWidget {
     }
 
     return Row(
+      mainAxisAlignment: mainAxisAlignment,
       children: List.generate(resList.length * 2 - 1, (index) {
         if (index.isOdd) {
           return const SizedBox(width: 10);

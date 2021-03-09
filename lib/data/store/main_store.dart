@@ -107,6 +107,28 @@ abstract class MainStoreBase with Store {
   }
 
   @action
+  Future<void> setBuildSetting(
+      bool value, int oil, int ammo, int steel, int aluminium) async {
+    final profile =
+        await api.setBuildSetting(value, oil, ammo, steel, aluminium);
+    await setUserProfile(profile);
+  }
+
+  @action
+  Future<void> setEquipmentSetting(
+      bool value, int oil, int ammo, int steel, int aluminium) async {
+    final profile =
+        await api.setEquipmentSetting(value, oil, ammo, steel, aluminium);
+    await setUserProfile(profile);
+  }
+
+  @action
+  Future<void> setPvpSetting(int fleet, int formats, bool isNight) async {
+    final profile = await api.setPvpSetting(fleet, formats, isNight);
+    await setUserProfile(profile);
+  }
+
+  @action
   Future<void> login(String username, String password) async {
     this.username = username;
     this.password = username;

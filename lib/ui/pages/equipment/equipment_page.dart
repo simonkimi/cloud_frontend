@@ -1,7 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:cloud_frontend/network/api.dart';
-import 'package:cloud_frontend/network/bean/build.dart';
 import 'package:cloud_frontend/network/bean/equipment.dart';
 import 'package:cloud_frontend/network/utils.dart';
 import 'package:cloud_frontend/ui/components/drawer.dart';

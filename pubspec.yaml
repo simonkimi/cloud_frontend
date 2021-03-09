@@ -11,11 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  bot_toast: ^3.0.5
   dio: 3.0.10
   shared_preferences: any
   mobx: ^1.2.1+4
   flutter_mobx: ^1.1.0+2
-  bot_toast: ^3.0.5
   smart_select: ^4.3.2
 
 

@@ -141,6 +141,11 @@ class Api {
     return StatisticBean.fromJson(rsp.data);
   }
 
+  Future<UserProfile> active(String code) async {
+    final rsp = await _dio.post('password/active/', data: {'code': code});
+    return UserProfile.fromJson(rsp.data);
+  }
+
   Future<StatisticBean> getCampaignStatistic(int startTime, int endTime) async {
     final rsp = await _dio.get('campaign/statistic/', queryParameters: {
       'start_time': startTime,

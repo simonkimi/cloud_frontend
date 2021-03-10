@@ -23,6 +23,7 @@ class MainDrawer extends StatelessWidget {
               ),
               Expanded(
                 child: ListView(
+                  padding: EdgeInsets.zero,
                   children: [
                     ListTile(
                       leading: const Icon(Icons.home),

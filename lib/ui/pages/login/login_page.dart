@@ -64,7 +64,6 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -111,8 +110,11 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  obscureText: true,
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: '密码'),
+                  decoration: const InputDecoration(
+                    labelText: '密码',
+                  ),
                 ),
                 const SizedBox(height: 20),
                 SmartSelect.single(
@@ -127,7 +129,8 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                   choiceItems: SERVER_LIST
                       .map((key, value) => MapEntry(
                           key, S2Choice<int>(value: key, title: value)))
-                      .values.toList(),
+                      .values
+                      .toList(),
                 ),
                 const SizedBox(height: 50),
                 Row(
@@ -185,6 +188,7 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
+                  obscureText: true,
                   decoration: const InputDecoration(labelText: '密码'),
                 ),
                 const SizedBox(height: 50),
@@ -204,13 +208,12 @@ class _LoginPageState extends State<LoginPage> with _LoginPageStateMixin {
                     ),
                     const Expanded(child: SizedBox()),
                     SizedBox(
-                      width: 65,
-                      height: 35,
-                      child: LoadingButton(
-                        child: const Text('登录'),
-                        onPressed: onLogin,
-                      )
-                    )
+                        width: 65,
+                        height: 35,
+                        child: LoadingButton(
+                          child: const Text('登录'),
+                          onPressed: onLogin,
+                        ))
                   ],
                 )
               ],

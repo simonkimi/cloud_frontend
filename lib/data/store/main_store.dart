@@ -129,6 +129,12 @@ abstract class MainStoreBase with Store {
   }
 
   @action
+  Future<void> active(String code) async {
+    final profile = await api.active(code);
+    await setUserProfile(profile);
+  }
+
+  @action
   Future<void> login(String username, String password) async {
     this.username = username;
     this.password = username;

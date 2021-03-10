@@ -38,9 +38,11 @@ class _LoadingButtonState extends State<LoadingButton> {
         } catch (e) {
           rethrow;
         } finally {
-          setState(() {
-            isLoading = false;
-          });
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
         }
       },
       child: AnimatedSwitcher(

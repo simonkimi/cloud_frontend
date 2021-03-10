@@ -1,6 +1,7 @@
 import 'package:cloud_frontend/data/store/main_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key key, this.tag}) : super(key: key);
@@ -107,6 +108,14 @@ class MainDrawer extends StatelessWidget {
                         } else {
                           Navigator.of(context).pop();
                         }
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.group_add),
+                      title: const Text('加入Q群'),
+                      onTap: () async {
+                        await launch(
+                            'https://qm.qq.com/cgi-bin/qm/qr?k=5UqLG1m6onbxrKyEKxiuN8G3XPTg_SIN&jump_from=webapi');
                       },
                     ),
                     ListTile(
